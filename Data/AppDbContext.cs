@@ -17,5 +17,6 @@ public class AppDbContext : DbContext, IAppDbContext
     {
         configurationBuilder.Properties<InvoiceId>().HaveConversion<InvoiceIdConverter>();
         configurationBuilder.Properties<ProductId>().HaveConversion<ProductIdConverter>();
+        configurationBuilder.Properties<ClaimId>().HaveConversion<ClaimIdConverter>();
     }
 }

@@ -39,7 +39,10 @@ builder.Services.AddMediator();
 builder.Services.AddScoped<IShortIdFactory, ShortIdFactory>();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseInMemoryDatabase("InMemoryDb");
+    options.UseSqlite("Data Source=:memory:");
+    options.EnableDetailedErrors();
+    options.EnableSensitiveDataLogging();
+    options.UseLoggerFactory(loggerFactory);
 });
 builder.Services.AddScoped<IAppDbContext, AppDbContext>();
 

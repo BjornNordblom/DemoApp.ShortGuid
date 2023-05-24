@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 public class ShortIdValidationAttribute : IActionFilter
 {
-    private string _requestModelName;
     private readonly IShortIdFactory _factory;
-    private readonly IHttpContextAccessor _contentAccessor;
 
     public ShortIdValidationAttribute(IShortIdFactory factory)
     {
@@ -17,11 +15,11 @@ public class ShortIdValidationAttribute : IActionFilter
     public void OnActionExecuting(ActionExecutingContext context)
     {
         context.ActionArguments.TryGetValue("id", out var id);
-        if (id == null)
-        {
+        if (id is null)
             return;
-        }
         var strId = id.ToString();
+        if (strId is null)
+            return;
         var isValid = _factory.Validate(strId);
         _factory.TryParse(strId, out var shortId);
         if (shortId == null)

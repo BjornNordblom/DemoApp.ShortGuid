@@ -6,6 +6,7 @@ public static class ShortIdIdentifiers
         new()
         {
             { InvoiceId.Identifier, typeof(InvoiceId) },
-            { ProductId.Identifier, typeof(ProductId) }
+            { ProductId.Identifier, typeof(ProductId) },
+            { ClaimId.Identifier, typeof(ClaimId) },
         };
 }

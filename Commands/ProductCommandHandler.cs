@@ -14,7 +14,7 @@ public sealed class ProductCommandHandler
         CancellationToken cancellationToken
     )
     {
-        var product = await _context.Products.FindAsync(request.Id.Guid, cancellationToken);
+        var product = await _context.Products.FindAsync(request.Id.Value, cancellationToken);
         return _mapper.MapProductToProductGetResponse(product);
     }
 }
