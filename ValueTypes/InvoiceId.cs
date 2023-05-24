@@ -1,16 +1,16 @@
 namespace DemoApp.ValueTypes;
 
-public class ProductId : ShortId<ProductId>, IShortId
+public class InvoiceId : ShortId<InvoiceId>, IShortId
 {
-    public static string Identifier => "prd";
+    public static string Identifier => "inv";
 
     // public static InvoiceId Create(Guid guid) => new InvoiceId(guid);
-    public ProductId()
+    public InvoiceId()
         : base(System.Guid.NewGuid()) { }
 
-    public ProductId(System.Guid guid)
+    public InvoiceId(System.Guid guid)
         : base(guid) { }
 
-    public ProductId(string shortid)
+    public InvoiceId(string shortid)
         : base(Parse(shortid)) { }
 }

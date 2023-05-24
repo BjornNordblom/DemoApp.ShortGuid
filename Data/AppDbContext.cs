@@ -1,3 +1,4 @@
+using DemoApp.ValueTypes;
 using Microsoft.EntityFrameworkCore;
 
 public class AppDbContext : DbContext, IAppDbContext
@@ -10,5 +11,11 @@ public class AppDbContext : DbContext, IAppDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Properties<InvoiceId>().HaveConversion<InvoiceIdConverter>();
+        configurationBuilder.Properties<ProductId>().HaveConversion<ProductIdConverter>();
     }
 }

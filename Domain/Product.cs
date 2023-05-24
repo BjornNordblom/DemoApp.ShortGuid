@@ -1,3 +1,5 @@
+using DemoApp.ValueTypes;
+
 public record Product
 {
     public ProductId Id { get; init; } = null!;
