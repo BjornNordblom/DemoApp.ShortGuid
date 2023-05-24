@@ -3,14 +3,14 @@ using Riok.Mapperly.Abstractions;
 
 public interface IDomainMapper
 {
-    ProductGetResponse MapProductToProductGetResponse(Product product);
+    ClaimGetResponse MapClaimToClaimGetResponse(Claim claim);
     MoneyDto MapMoneyToMoneyDto(Money money);
 }
 
 [Mapper]
 public partial class DomainMapper : IDomainMapper
 {
-    public partial ProductGetResponse MapProductToProductGetResponse(Product product);
+    public partial ClaimGetResponse MapClaimToClaimGetResponse(Claim claim);
 
     public partial MoneyDto MapMoneyToMoneyDto(Money money);
 }

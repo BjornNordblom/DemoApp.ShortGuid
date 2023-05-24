@@ -6,7 +6,8 @@ public class AppDbContext : DbContext, IAppDbContext
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
 
-    public DbSet<Product> Products { get; set; } = null!;
+    public DbSet<Claim> Claims { get; set; } = null!;
+    public DbSet<Invoice> Invoices { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -16,7 +17,7 @@ public class AppDbContext : DbContext, IAppDbContext
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder.Properties<InvoiceId>().HaveConversion<InvoiceIdConverter>();
-        configurationBuilder.Properties<ProductId>().HaveConversion<ProductIdConverter>();
         configurationBuilder.Properties<ClaimId>().HaveConversion<ClaimIdConverter>();
+        configurationBuilder.Properties<Currency>().HaveConversion<CurrencyConverter>();
     }
 }

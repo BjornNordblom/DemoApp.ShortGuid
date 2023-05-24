@@ -36,10 +36,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddLogging();
 builder.Services.AddMediator();
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<IShortIdFactory, ShortIdFactory>();
+
+//builder.Services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlite("Data Source=:memory:");
+    options.UseSqlite("Data Source=.app.sqlite");
     options.EnableDetailedErrors();
     options.EnableSensitiveDataLogging();
     options.UseLoggerFactory(loggerFactory);
@@ -62,17 +65,52 @@ app.UseAuthorization();
 // app.MapControllers();
 app.MapGet(
     "/",
-    () =>
+    async (IHttpClientFactory clientFactory) =>
     {
-        return Results.Ok();
+        var httpClient = clientFactory.CreateClient();
+        var response = await httpClient.PostAsJsonAsync(
+            "http://localhost:5298/claim",
+            new { ReferenceNumber = "1234567890", Currency = "USD" }
+        );
+        // Fetch the response
+        var claim = await response.Content.ReadAsStringAsync();
+        //var claim = await response.Content.ReadFromJsonAsync<ClaimGetResponse>();
+        return Results.Ok(claim);
+    }
+);
+
+app.MapPost(
+    "/claim",
+    async (
+        [FromBody] ClaimCreateCommand request,
+        IAppDbContext context,
+        CancellationToken cancellationToken
+    ) =>
+    {
+        var claim = new Claim
+        {
+            Id = new ClaimId(),
+            ReferenceNumber = request.ReferenceNumber,
+            Currency = new Currency(request.Currency)
+        };
+        context.Claims.Add(claim);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Results.Created(
+            $"/claim/{claim.Id}",
+            new ClaimGetResponse(claim.Id, claim.ReferenceNumber, claim.Currency)
+        );
     }
 );
 
 app.MapGet(
-    "/product/{id}",
-    async ([FromRoute] ProductId id) =>
+    "/claim/{id}",
+    async (IAppDbContext context, CancellationToken cancellationToken, [FromRoute] ClaimId id) =>
     {
-        return Results.Ok(id.Value);
+        var result = await context.Claims.FindAsync(id, cancellationToken);
+        if (result == null)
+            return Results.NotFound();
+        return Results.Ok(new ClaimGetResponse(result.Id, result.ReferenceNumber, result.Currency));
     }
 );
 
