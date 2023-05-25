@@ -10,5 +10,6 @@ public class ClaimConfiguration : IEntityTypeConfiguration<Claim>
         builder.Property(x => x.Id).ValueGeneratedNever();
         builder.Property(x => x.ReferenceNumber).IsRequired();
         builder.Property(x => x.Currency).IsRequired();
+        builder.HasMany(x => x.History).WithOne(x => x.Claim).HasForeignKey(x => x.ClaimId);
     }
 }

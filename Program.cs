@@ -53,7 +53,7 @@ var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
 IAppDbContext context = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
-
+await context.Database.EnsureDeletedAsync();
 await context.Database.EnsureCreatedAsync();
 
 app.UseSwagger();
